@@ -1,0 +1,695 @@
+{
+    "info": {
+      "_postman_id": "5e8b40c3-4d28-48e7-9ea0-f59f66b0d8a9",
+      "name": "Spring Payment API",
+      "description": "Collection for testing the Spring Boot Payment API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Orders",
+        "item": [
+          {
+            "name": "Create Order",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"customerName\": \"John Doe\",\n    \"customerEmail\": \"john.doe@example.com\",\n    \"amount\": 299.99,\n    \"currency\": \"USD\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/orders",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders"
+                ]
+              },
+              "description": "Creates a new order"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Order By ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/orders/1",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders",
+                  "1"
+                ]
+              },
+              "description": "Retrieves order details by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Create Invalid Order",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"customerName\": \"\",\n    \"customerEmail\": \"invalid-email\",\n    \"amount\": -10,\n    \"currency\": \"\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/orders",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders"
+                ]
+              },
+              "description": "Attempts to create an order with invalid data"
+            },
+            "response": []
+          }
+        ],
+        "description": "Endpoints for managing orders"
+      },
+      {
+        "name": "Payments",
+        "item": [
+          {
+            "name": "Process Bank Payment",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "exec": [
+                    "// Store the orderId from create order response",
+                    "const orderId = pm.environment.get(\"orderId\");",
+                    "",
+                    "// If you don't have orderId in environment, you can use a default value",
+                    "if (!orderId) {",
+                    "    pm.environment.set(\"orderId\", 1);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"orderId\": {{orderId}},\n    \"paymentMethod\": \"BANK\",\n    \"bankName\": \"Example Bank\",\n    \"accountNumber\": \"12345678\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/payments",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Process a bank payment for an order"
+            },
+            "response": []
+          },
+          {
+            "name": "Process Cash Payment",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "exec": [
+                    "// Store the orderId from create order response",
+                    "const orderId = pm.environment.get(\"orderId\");",
+                    "",
+                    "// If you don't have orderId in environment, you can use a default value",
+                    "if (!orderId) {",
+                    "    pm.environment.set(\"orderId\", 1);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"orderId\": {{orderId}},\n    \"paymentMethod\": \"CASH\",\n    \"receiptNumber\": \"RCPT-123456\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/payments",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Process a cash payment for an order"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Payment By ID",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "exec": [
+                    "// Store the paymentId from payment response",
+                    "const paymentId = pm.environment.get(\"paymentId\");",
+                    "",
+                    "// If you don't have paymentId in environment, you can use a default value",
+                    "if (!paymentId) {",
+                    "    pm.environment.set(\"paymentId\", 1);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/payments/{{paymentId}}",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  "{{paymentId}}"
+                ]
+              },
+              "description": "Retrieves payment details by ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Payments By Order ID",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "exec": [
+                    "// Store the orderId from create order response",
+                    "const orderId = pm.environment.get(\"orderId\");",
+                    "",
+                    "// If you don't have orderId in environment, you can use a default value",
+                    "if (!orderId) {",
+                    "    pm.environment.set(\"orderId\", 1);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/payments/order/{{orderId}}",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  "order",
+                  "{{orderId}}"
+                ]
+              },
+              "description": "Retrieves all payments for a specific order"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Bank Payment Status",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "exec": [
+                    "// Store the paymentId from payment response",
+                    "const paymentId = pm.environment.get(\"paymentId\");",
+                    "",
+                    "// If you don't have paymentId in environment, you can use a default value",
+                    "if (!paymentId) {",
+                    "    pm.environment.set(\"paymentId\", 1);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "PATCH",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/payments/{{paymentId}}/status?status=COMPLETED",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  "{{paymentId}}",
+                  "status"
+                ],
+                "query": [
+                  {
+                    "key": "status",
+                    "value": "COMPLETED"
+                  }
+                ]
+              },
+              "description": "Updates the status of a bank payment"
+            },
+            "response": []
+          },
+          {
+            "name": "Process Invalid Payment",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"orderId\": 999,\n    \"paymentMethod\": \"INVALID_METHOD\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/payments",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Attempts to process a payment with invalid data"
+            },
+            "response": []
+          }
+        ],
+        "description": "Endpoints for managing payments"
+      },
+      {
+        "name": "End-to-End Flow Tests",
+        "item": [
+          {
+            "name": "1. Create Order",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "// Test for successful response",
+                    "pm.test(\"Status code is 201\", function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "",
+                    "// Store the order ID for subsequent requests",
+                    "var jsonData = pm.response.json();",
+                    "pm.environment.set(\"e2e_orderId\", jsonData.id);",
+                    "",
+                    "pm.test(\"Order created successfully\", function () {",
+                    "    pm.expect(jsonData.id).to.exist;",
+                    "    pm.expect(jsonData.status).to.eql(\"CREATED\");",
+                    "    pm.expect(jsonData.customerName).to.eql(\"E2E Test Customer\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"customerName\": \"E2E Test Customer\",\n    \"customerEmail\": \"e2e.test@example.com\",\n    \"amount\": 499.99,\n    \"currency\": \"USD\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/orders",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders"
+                ]
+              },
+              "description": "Create an order as part of the E2E flow"
+            },
+            "response": []
+          },
+          {
+            "name": "2a. Process Bank Payment",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test(\"Status code is 201\", function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "",
+                    "// Store the payment ID for subsequent requests",
+                    "var jsonData = pm.response.json();",
+                    "pm.environment.set(\"e2e_paymentId\", jsonData.id);",
+                    "",
+                    "pm.test(\"Bank payment processed successfully\", function () {",
+                    "    pm.expect(jsonData.id).to.exist;",
+                    "    pm.expect(jsonData.paymentMethod).to.eql(\"BANK\");",
+                    "    pm.expect(jsonData.status).to.eql(\"PROCESSING\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"orderId\": {{e2e_orderId}},\n    \"paymentMethod\": \"BANK\",\n    \"bankName\": \"E2E Test Bank\",\n    \"accountNumber\": \"E2E-12345678\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/payments",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Process a bank payment for the created order"
+            },
+            "response": []
+          },
+          {
+            "name": "3a. Update Bank Payment Status",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test(\"Payment status updated successfully\", function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.status).to.eql(\"COMPLETED\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "PATCH",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/payments/{{e2e_paymentId}}/status?status=COMPLETED",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  "{{e2e_paymentId}}",
+                  "status"
+                ],
+                "query": [
+                  {
+                    "key": "status",
+                    "value": "COMPLETED"
+                  }
+                ]
+              },
+              "description": "Update the bank payment status to COMPLETED"
+            },
+            "response": []
+          },
+          {
+            "name": "4a. Verify Order Status After Bank Payment",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test(\"Order status is PAID after bank payment completion\", function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.status).to.eql(\"PAID\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/orders/{{e2e_orderId}}",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders",
+                  "{{e2e_orderId}}"
+                ]
+              },
+              "description": "Verify that the order status is updated to PAID after bank payment is completed"
+            },
+            "response": []
+          },
+          {
+            "name": "1. Create Order (For Cash Payment)",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "// Test for successful response",
+                    "pm.test(\"Status code is 201\", function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "",
+                    "// Store the order ID for subsequent requests",
+                    "var jsonData = pm.response.json();",
+                    "pm.environment.set(\"e2e_cash_orderId\", jsonData.id);",
+                    "",
+                    "pm.test(\"Order created successfully\", function () {",
+                    "    pm.expect(jsonData.id).to.exist;",
+                    "    pm.expect(jsonData.status).to.eql(\"CREATED\");",
+                    "    pm.expect(jsonData.customerName).to.eql(\"Cash Payment Customer\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"customerName\": \"Cash Payment Customer\",\n    \"customerEmail\": \"cash.customer@example.com\",\n    \"amount\": 249.99,\n    \"currency\": \"USD\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/orders",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders"
+                ]
+              },
+              "description": "Create an order for cash payment testing"
+            },
+            "response": []
+          },
+          {
+            "name": "2b. Process Cash Payment",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test(\"Status code is 201\", function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "",
+                    "// Store the payment ID for subsequent requests",
+                    "var jsonData = pm.response.json();",
+                    "pm.environment.set(\"e2e_cash_paymentId\", jsonData.id);",
+                    "",
+                    "pm.test(\"Cash payment processed successfully\", function () {",
+                    "    pm.expect(jsonData.id).to.exist;",
+                    "    pm.expect(jsonData.paymentMethod).to.eql(\"CASH\");",
+                    "    pm.expect(jsonData.status).to.eql(\"COMPLETED\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"orderId\": {{e2e_cash_orderId}},\n    \"paymentMethod\": \"CASH\",\n    \"receiptNumber\": \"CASH-RCPT-987654\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/payments",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Process a cash payment for the created order"
+            },
+            "response": []
+          },
+          {
+            "name": "3b. Verify Order Status After Cash Payment",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test(\"Order status is PAID immediately after cash payment\", function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.status).to.eql(\"PAID\");",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/orders/{{e2e_cash_orderId}}",
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "path": [
+                  "api",
+                  "orders",
+                  "{{e2e_cash_orderId}}"
+                ]
+              },
+              "description": "Verify that the order status is updated to PAID immediately after cash payment"
+            },
+            "response": []
+          }
+        ],
+        "description": "End-to-end flow tests for order and payment processing"
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            ""
+          ]
+        }
+      },
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            ""
+          ]
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:8080",
+        "type": "string"
+      }
+    ]
+  }

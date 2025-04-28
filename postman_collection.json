@@ -660,6 +660,36 @@
               "description": "Verify that the order status is updated to PAID immediately after cash payment"
             },
             "response": []
+          },
+          {
+            "name": "Create VNPay Payment",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"amount\": 100000,\n    \"orderInfo\": \"Thanh toan don hang #123\"\n}"
+              },
+              "url": {
+                "raw": "http://localhost:8080/api/payments/create-payment",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8080",
+                "path": [
+                  "api",
+                  "payments",
+                  "create-payment"
+                ]
+              }
+            },
+            "response": []
           }
         ],
         "description": "End-to-end flow tests for order and payment processing"

@@ -115,7 +115,11 @@ Replace `YOUR_TMN_CODE` and `YOUR_HASH_SECRET` with your sandbox credentials.
     }
     ```
   - Response: URL thanh toán VNPay (redirect user tới URL này) / VNPay payment URL (redirect user to this URL)
+
+
     ![alt text](image.png)
+
+    
     ![alt text](image-1.png)
 - **Callback kết quả thanh toán / Payment callback**
   - `GET /api/payments/vnpay-payment`
